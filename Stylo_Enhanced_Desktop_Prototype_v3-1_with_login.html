@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Stylo — Local Fashion Marketplace</title>
+<style>
+:root{
+  --plum:#6c2a3d;--plum2:#4c1d2c;--gold:#e8a33d;--cream:#fbf7f1;
+  --bg:#f1ebe2;--card:#fff;--ink:#241c1f;--muted:#81766f;--line:#e5ddd2;
+  --green:#4d7b57;--red:#b4443b;--shadow:0 14px 40px rgba(55,38,30,.09);
+}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif}
+button,input,select{font:inherit}.app{min-height:100vh;display:flex}.sidebar{width:250px;background:#fff;border-right:1px solid var(--line);position:fixed;inset:0 auto 0 0;padding:26px 18px;z-index:5}
+.logo{font:700 30px Georgia,serif;color:var(--plum);margin:0 10px 4px}.logo b{color:var(--gold)}.tagline{font-size:11px;color:var(--muted);margin:0 10px 28px}
+.mode{display:flex;background:#f6f0e8;border-radius:12px;padding:4px;margin-bottom:22px}.mode button{flex:1;border:0;background:transparent;padding:9px;border-radius:9px;font-weight:800;font-size:11px;color:var(--muted);cursor:pointer}.mode button.active{background:var(--plum);color:#fff}
+.nav{display:grid;gap:5px}.nav button{border:0;background:transparent;text-align:left;padding:12px 13px;border-radius:10px;font-weight:750;color:#6f645e;cursor:pointer}.nav button.active,.nav button:hover{background:#f8f1ec;color:var(--plum)}
+.store-mini{position:absolute;bottom:22px;left:18px;right:18px;background:#f8f1ec;border-radius:14px;padding:13px;font-size:12px}.store-mini strong{display:block;margin-bottom:3px}.store-mini span{color:var(--muted)}
+.main{margin-left:250px;flex:1;min-width:0}.top{height:76px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 34px;position:sticky;top:0;z-index:4}.top h1{font:600 25px Georgia,serif;margin:0}.top-right{display:flex;align-items:center;gap:10px}.location{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 12px;color:var(--ink);cursor:pointer}.avatar{width:38px;height:38px;border-radius:50%;background:var(--plum);color:#fff;display:grid;place-items:center;font-weight:800}
+.page{padding:28px 34px 50px;max-width:1500px;margin:auto}.hidden{display:none!important}
+.hero{background:linear-gradient(120deg,var(--plum2),var(--plum));border-radius:22px;padding:32px;color:#fff;display:flex;justify-content:space-between;gap:24px;overflow:hidden}.hero h2{font:600 34px Georgia,serif;margin:5px 0 10px}.hero p{max-width:650px;color:#eadde1;line-height:1.6;margin:0}.hero .hero-box{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:16px;padding:18px;min-width:240px}.hero .hero-box b{font-size:28px}.section-head{display:flex;align-items:end;justify-content:space-between;margin:28px 0 14px}.section-head h2{font:600 22px Georgia,serif;margin:0}.section-head p{font-size:12px;color:var(--muted);margin:4px 0 0}
+.segment{display:flex;gap:7px;background:#fff;border:1px solid var(--line);padding:4px;border-radius:11px;width:max-content}.segment button{border:0;background:transparent;border-radius:8px;padding:8px 15px;font-size:12px;font-weight:800;color:var(--muted);cursor:pointer}.segment button.active{background:var(--plum);color:#fff}
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}.field{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:150px}.search{min-width:280px;flex:1}.field input,.field select{border:0;outline:0;background:transparent;width:100%;font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(190px,1fr));gap:17px}.card{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 4px 14px rgba(50,30,20,.03)}.pic{height:235px;background-size:cover;background-position:center;position:relative}.badge{position:absolute;top:10px;left:10px;background:var(--gold);padding:5px 8px;border-radius:7px;font-size:10px;font-weight:900}.stock{position:absolute;bottom:10px;left:10px;background:rgba(255,255,255,.94);padding:5px 8px;border-radius:7px;font-size:10px;font-weight:900}.body{padding:13px}.body h3{font-size:14px;margin:0 0 4px}.meta{font-size:11px;color:var(--muted);margin-bottom:8px}.price{font-family:ui-monospace,monospace;color:var(--plum2);font-weight:800}.old{text-decoration:line-through;color:var(--muted);font-size:11px;margin-left:5px}.card-actions{display:flex;gap:7px;margin-top:12px}.btn{border:0;background:var(--plum);color:#fff;border-radius:9px;padding:10px 13px;font-weight:800;cursor:pointer}.btn.gold{background:var(--gold);color:var(--ink)}.btn.ghost{background:#fff;color:var(--plum);border:1px solid var(--plum)}.btn.small{font-size:11px;padding:8px 10px}.btn:disabled{opacity:.45;cursor:not-allowed}
+.store-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.store{background:#fff;border:1px solid var(--line);border-radius:15px;padding:16px}.store-top{display:flex;justify-content:space-between}.store h3{margin:0 0 4px;font-size:15px}.store p{margin:3px 0;font-size:11px;color:var(--muted)}.pill{display:inline-block;padding:5px 8px;border-radius:7px;background:#f4ece2;color:var(--plum2);font-size:10px;font-weight:800;margin:5px 4px 0 0}
+.table-wrap{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:auto}.table{width:100%;border-collapse:collapse;font-size:12px}.table th{text-align:left;background:#faf6f0;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.05em;padding:13px}.table td{padding:13px;border-top:1px solid var(--line);vertical-align:middle}.thumb{width:48px;height:55px;border-radius:8px;background-size:cover;background-position:center}.status{padding:5px 8px;border-radius:7px;font-size:10px;font-weight:900}.in{background:#eaf1e9;color:var(--green)}.low{background:#fff0d8;color:#9b671a}.out{background:#fbe8e6;color:var(--red)}
+.qty{display:flex;align-items:center;gap:8px}.qty button{width:28px;height:28px;border:1px solid var(--line);background:#fff;border-radius:7px;cursor:pointer;font-weight:900}.qty b{min-width:25px;text-align:center}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.stat{background:#fff;border:1px solid var(--line);border-radius:15px;padding:17px}.stat .num{font:700 25px ui-monospace,monospace;color:var(--plum2)}.stat small{color:var(--muted);font-weight:700}
+.two{display:grid;grid-template-columns:1.4fr .9fr;gap:18px}.panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px}.panel h3{font:600 18px Georgia,serif;margin:0 0 14px}.notice{padding:12px;border-radius:10px;background:#fff8ec;margin:8px 0;font-size:12px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.formgroup label{display:block;font-size:10px;color:var(--muted);font-weight:900;margin-bottom:6px;text-transform:uppercase}.formgroup input,.formgroup select{width:100%;padding:11px;border:1px solid var(--line);border-radius:9px;background:#fff;outline:0}.formgroup.full{grid-column:1/-1}.modal{position:fixed;inset:0;background:rgba(30,20,18,.45);display:grid;place-items:center;z-index:20}.modal-box{width:min(620px,92vw);background:#fff;border-radius:20px;padding:22px;box-shadow:var(--shadow)}.modal-head{display:flex;justify-content:space-between;align-items:center}.modal-head h2{font:600 22px Georgia,serif;margin:0}.close{border:0;background:#f5eee7;border-radius:50%;width:32px;height:32px;cursor:pointer}.empty{padding:50px;text-align:center;color:var(--muted);background:#fff;border:1px dashed var(--line);border-radius:16px}
+@media(max-width:1100px){.grid{grid-template-columns:repeat(3,1fr)}.store-grid{grid-template-columns:1fr 1fr}.two{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}}
+@media(max-width:800px){.sidebar{width:76px;padding:18px 10px}.logo{font-size:21px}.tagline,.mode button span,.nav button span,.store-mini{display:none}.mode{display:block;background:transparent}.mode button{width:100%;font-size:0}.mode button:after{content:'◉';font-size:15px}.mode button.active:after{content:'●'}.main{margin-left:76px}.top{padding:0 18px}.page{padding:20px 18px}.grid{grid-template-columns:repeat(2,1fr)}.hero{padding:22px}.hero .hero-box{display:none}}
+
+/* Login + OTP prototype */
+.auth-screen{position:fixed;inset:0;background:linear-gradient(135deg,#24131b,#6c2a3d);display:grid;place-items:center;z-index:100;padding:20px}
+.auth-card{width:min(460px,94vw);background:#fff;border-radius:24px;padding:30px;box-shadow:0 25px 70px rgba(0,0,0,.28)}
+.auth-logo{font:700 38px Georgia,serif;color:var(--plum);margin-bottom:4px}.auth-logo span{color:var(--gold)}
+.auth-sub{color:var(--muted);font-size:13px;margin:0 0 24px}.auth-step{display:none}.auth-step.active{display:block}
+.auth-label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:900;color:var(--muted);margin:0 0 7px}
+.auth-input{width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:11px;outline:0;font-size:15px}
+.auth-input:focus{border-color:var(--plum);box-shadow:0 0 0 3px rgba(108,42,61,.08)}
+.auth-btn{width:100%;margin-top:13px;padding:13px;border:0;border-radius:11px;background:var(--plum);color:#fff;font-weight:900;cursor:pointer}
+.auth-btn.secondary{background:#f5eee7;color:var(--plum)}
+.otp-row{display:flex;gap:8px;margin-top:8px}.otp-row input{text-align:center;font-weight:900;font-size:20px}
+.otp-note{font-size:12px;color:var(--muted);line-height:1.5;margin-top:12px}
+.demo-otp{background:#fff8ec;border:1px solid #f0d49e;border-radius:10px;padding:10px;margin-top:12px;font-size:12px}
+.auth-error{color:var(--red);font-size:12px;margin-top:9px;min-height:16px}
+.user-menu{position:relative}.user-menu button{border:0;cursor:pointer}
+.account-pop{position:absolute;right:0;top:48px;width:210px;background:#fff;border:1px solid var(--line);border-radius:13px;box-shadow:var(--shadow);padding:12px;z-index:10}
+.account-pop button{width:100%;border:0;background:#f8f1ec;color:var(--plum);padding:9px;border-radius:9px;font-weight:800;cursor:pointer;margin-top:8px}
+
+
+.notification-wrap{position:relative}.notification-btn{width:40px;height:40px;border:1px solid var(--line);background:#fff;border-radius:10px;cursor:pointer;font-size:19px;position:relative}.notification-badge{position:absolute;right:-4px;top:-5px;min-width:18px;height:18px;padding:0 5px;border-radius:10px;background:var(--red);color:#fff;font-size:9px;font-weight:900;display:grid;place-items:center;border:2px solid #fff}.notification-panel{position:absolute;right:0;top:48px;width:350px;max-width:calc(100vw - 30px);background:#fff;border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow);z-index:15;overflow:hidden}.notification-head{display:flex;justify-content:space-between;align-items:center;padding:14px 15px;border-bottom:1px solid var(--line)}.notification-head h3{margin:0;font:600 17px Georgia,serif}.notification-head button{border:0;background:transparent;color:var(--plum);font-size:11px;font-weight:800;cursor:pointer}.notification-list{max-height:390px;overflow:auto}.notification-item{display:flex;gap:11px;padding:13px 15px;border-bottom:1px solid var(--line);cursor:pointer}.notification-item:hover{background:#faf6f0}.notification-item.unread{background:#fff8ec}.notification-icon{width:34px;height:34px;border-radius:9px;background:#f4ece2;color:var(--plum);display:grid;place-items:center;font-weight:900;flex:none}.notification-item b{font-size:12px}.notification-item p{font-size:11px;color:var(--muted);margin:3px 0 0;line-height:1.4}.notification-item small{display:block;font-size:9px;color:#9b918a;margin-top:5px}.notification-empty{padding:28px;text-align:center;color:var(--muted);font-size:12px}.notification-page-grid{display:grid;gap:10px}.notification-page-item{background:#fff;border:1px solid var(--line);border-radius:14px;padding:15px;display:flex;gap:13px}.notification-page-item.unread{border-left:4px solid var(--gold);background:#fffaf2}
+
+</style>
+</head>
+<body>
+
+<div id="authScreen" class="auth-screen">
+  <div class="auth-card">
+    <div class="auth-logo">Stylo<span>.</span></div>
+    <p class="auth-sub">Local fashion. Smarter shopping.</p>
+
+    <div id="phoneStep" class="auth-step active">
+      <label class="auth-label">Mobile number</label>
+      <input id="authPhone" class="auth-input" type="tel" maxlength="10" placeholder="Enter 10-digit mobile number">
+      <button class="auth-btn" onclick="sendOTP()">Send OTP</button>
+      <div id="phoneError" class="auth-error"></div>
+      <div class="otp-note">Login is required before entering the Stylo prototype.</div>
+    </div>
+
+    <div id="otpStep" class="auth-step">
+      <label class="auth-label">Enter OTP</label>
+      <div class="otp-row">
+        <input id="otp1" class="auth-input" maxlength="1" inputmode="numeric">
+        <input id="otp2" class="auth-input" maxlength="1" inputmode="numeric">
+        <input id="otp3" class="auth-input" maxlength="1" inputmode="numeric">
+        <input id="otp4" class="auth-input" maxlength="1" inputmode="numeric">
+        <input id="otp5" class="auth-input" maxlength="1" inputmode="numeric">
+        <input id="otp6" class="auth-input" maxlength="1" inputmode="numeric">
+      </div>
+      <div id="demoOtp" class="demo-otp"></div>
+      <button class="auth-btn" onclick="verifyOTP()">Verify & Continue</button>
+      <button class="auth-btn secondary" onclick="backToPhone()">Change number</button>
+      <div id="otpError" class="auth-error"></div>
+    </div>
+  </div>
+</div>
+
+<div class="app">
+<aside class="sidebar">
+  <div class="logo">Stylo<span>.</span></div><p class="tagline">Local fashion. Smarter shopping.</p>
+  <div class="mode"><button id="customerMode" class="active" onclick="switchMode('customer')"><span>Customer</span> Customer</button><button id="shopMode" onclick="switchMode('shop')"><span>Shopkeeper</span> Shopkeeper</button></div>
+  <nav id="customerNav" class="nav">
+    <button class="active" onclick="showPage('discover',this)">⌂ <span>Discover</span></button>
+    <button onclick="showPage('products',this)">◈ <span>Products</span></button>
+    <button onclick="showPage('stores',this)">⌖ <span>Nearby Stores</span></button>
+    <button onclick="showPage('reservations',this)">▣ <span>Reservations</span></button>
+    <button onclick="showPage('notifications',this)">🔔 <span>Notifications</span></button>
+  </nav>
+  <nav id="shopNav" class="nav hidden">
+    <button class="active" onclick="showPage('dashboard',this)">▦ <span>Dashboard</span></button>
+    <button onclick="showPage('inventory',this)">▤ <span>Inventory</span></button>
+    <button onclick="showPage('add',this)">＋ <span>Add Product</span></button>
+    <button onclick="showPage('storeManage',this)">⌖ <span>Store & Location</span></button>
+  </nav>
+  <div class="store-mini"><strong>Meher Fashion House</strong><span>Shopkeeper account · Online</span></div>
+</aside>
+
+<main class="main">
+<header class="top"><h1 id="pageTitle">Discover local fashion</h1><div class="top-right">
+<div class="notification-wrap">
+  <button class="notification-btn" onclick="toggleNotifications()" aria-label="Notifications">🔔<span id="notificationBadge" class="notification-badge hidden">0</span></button>
+  <div id="notificationPanel" class="notification-panel hidden">
+    <div class="notification-head"><h3>Notifications</h3><button onclick="markAllNotificationsRead()">Mark all read</button></div>
+    <div id="notificationList" class="notification-list"></div>
+  </div>
+</div>
+<select class="location" id="globalLocation" onchange="setLocation(this.value)">
+<option>Patelnagar</option><option>Anandnagar</option><option>Ratnagiri</option><option>Awadpuri</option><option>Ayodhya Bypass</option>
+</select><div class="user-menu"><button class="avatar" onclick="toggleAccount()">HS</button><div id="accountPop" class="account-pop hidden"><b id="accountName">Stylo User</b><div class="meta" id="accountPhone"></div><button onclick="logout()">Log out</button></div></div></div></header>
+
+<section id="discover" class="page">
+  <div class="hero"><div><div style="font-size:11px;font-weight:900;letter-spacing:.12em;color:#f2c579">STYLO LOCAL</div><h2>Find the right clothes before visiting the shop.</h2><p>Browse verified local products, sizes and live stock. Choose the exact category you want and reserve it for an in-store try-on.</p></div><div class="hero-box"><div style="font-size:11px;color:#eadde1">Showing products around</div><b id="heroLocation">Patelnagar</b><div style="font-size:11px;color:#eadde1;margin-top:7px">5 local areas available</div></div></div>
+  <div class="section-head"><div><h2>Shop by collection</h2><p>Men and women are kept completely separate. More products added across every category.</p></div><div class="segment"><button id="menBtn" class="active" onclick="setGender('Men')">Men</button><button id="womenBtn" onclick="setGender('Women')">Women</button></div></div>
+  <div class="filters"><div class="field search"><input id="homeSearch" placeholder="Search t-shirts, kurtas, shirts, jeans..." oninput="renderProducts()"></div><div class="field"><select id="homeCategory" onchange="renderProducts()"><option value="All">All categories</option><option>T-Shirt</option><option>Kurta</option><option>Shirt</option><option>Jeans</option><option>Jacket</option><option>Top</option><option>Kurti</option><option>Saree</option><option>Frock</option><option>Gown</option></select></div></div>
+  <div id="homeGrid" class="grid"></div>
+  <div class="section-head"><div><h2>Stores in your area</h2><p>Local stores with products currently listed on Stylo.</p></div><button class="btn ghost small" onclick="showPage('stores')">View all stores</button></div>
+  <div id="homeStores" class="store-grid"></div>
+</section>
+
+<section id="products" class="page hidden">
+  <div class="section-head"><div><h2>Product catalogue</h2><p>Exact category matching — every category has listed products and T-Shirt/Kurta never mix.</p></div><div class="segment"><button id="pMen" class="active" onclick="setGender('Men')">Men</button><button id="pWomen" onclick="setGender('Women')">Women</button></div></div>
+  <div class="filters"><div class="field search"><input id="productSearch" placeholder="Search products..." oninput="renderProducts()"></div><div class="field"><select id="productCategory" onchange="renderProducts()"><option value="All">All categories</option><option>T-Shirt</option><option>Kurta</option><option>Shirt</option><option>Jeans</option><option>Jacket</option><option>Top</option><option>Kurti</option><option>Saree</option><option>Frock</option><option>Gown</option></select></div><div class="field"><select id="productStore" onchange="renderProducts()"><option value="All">All stores</option></select></div></div>
+  <div id="productGrid" class="grid"></div>
+</section>
+
+<section id="stores" class="page hidden"><div class="section-head"><div><h2>Nearby local stores</h2><p id="storeLocationText">Stores in Patelnagar</p></div></div><div id="storeGrid" class="store-grid"></div></section>
+<section id="reservations" class="page hidden"><div class="section-head"><div><h2>My reservations</h2><p>Reserve stock before you visit.</p></div></div><div id="reservationList"></div></section>
+<section id="notifications" class="page hidden">
+  <div class="section-head">
+    <div><h2>Notifications</h2><p>Stay updated about reservations, stock and new local products.</p></div>
+    <button class="btn ghost small" onclick="markAllNotificationsRead();renderNotificationsPage()">Mark all as read</button>
+  </div>
+  <div id="notificationPageList" class="notification-page-grid"></div>
+</section>
+
+<section id="dashboard" class="page hidden">
+ <div class="section-head"><div><h2>Shopkeeper dashboard</h2><p>Meher Fashion House · live inventory controls</p></div><button class="btn" onclick="showPage('add')">＋ Add product</button></div>
+ <div class="stats"><div class="stat"><div class="num" id="statProducts">0</div><small>Products listed</small></div><div class="stat"><div class="num" id="statStock">0</div><small>Total units in stock</small></div><div class="stat"><div class="num" id="statLow">0</div><small>Low stock</small></div><div class="stat"><div class="num" id="statRes">0</div><small>Reservations</small></div></div>
+ <div class="two" style="margin-top:18px"><div class="panel"><h3>Low stock alerts</h3><div id="lowStockList"></div></div><div class="panel"><h3>Recent reservations</h3><div id="recentRes"></div></div></div>
+</section>
+
+<section id="inventory" class="page hidden">
+ <div class="section-head"><div><h2>Inventory management</h2><p>Change quantity by product and size. Customer stock updates instantly.</p></div><button class="btn" onclick="showPage('add')">＋ Add product</button></div>
+ <div class="filters"><div class="field search"><input id="inventorySearch" placeholder="Search inventory..." oninput="renderInventory()"></div><div class="field"><select id="inventoryGender" onchange="renderInventory()"><option>All</option><option>Men</option><option>Women</option></select></div><div class="field"><select id="inventoryCategory" onchange="renderInventory()"><option>All</option><option>T-Shirt</option><option>Kurta</option><option>Shirt</option><option>Jeans</option><option>Jacket</option><option>Top</option><option>Kurti</option><option>Saree</option><option>Frock</option><option>Gown</option></select></div></div>
+ <div class="table-wrap"><table class="table"><thead><tr><th>Product</th><th>Audience</th><th>Category</th><th>Location</th><th>Price</th><th>Stock</th><th>Status</th><th>Action</th></tr></thead><tbody id="inventoryBody"></tbody></table></div>
+</section>
+
+<section id="add" class="page hidden">
+ <div class="section-head"><div><h2>Add product</h2><p>Add a product with exact category, audience, location and stock.</p></div></div>
+ <div class="panel"><div class="formgrid">
+  <div class="formgroup"><label>Product name</label><input id="newName" placeholder="e.g. Oversized Black T-Shirt"></div>
+  <div class="formgroup"><label>Audience</label><select id="newGender"><option>Men</option><option>Women</option></select></div>
+  <div class="formgroup"><label>Category</label><select id="newCategory"><option>T-Shirt</option><option>Kurta</option><option>Shirt</option><option>Jeans</option><option>Jacket</option><option>Top</option><option>Kurti</option><option>Saree</option><option>Frock</option><option>Gown</option></select></div>
+  <div class="formgroup"><label>Store location</label><select id="newLocation"><option>Patelnagar</option><option>Anandnagar</option><option>Ratnagiri</option><option>Awadpuri</option><option>Ayodhya Bypass</option></select></div>
+  <div class="formgroup"><label>Price</label><input id="newPrice" type="number" placeholder="599"></div>
+  <div class="formgroup"><label>Initial stock</label><input id="newStock" type="number" placeholder="10"></div>
+  <div class="formgroup"><label>Available sizes</label><input id="newSizes" value="S,M,L,XL"></div>
+  <div class="formgroup"><label>Image URL</label><input id="newImage" placeholder="https://..."></div>
+  <div class="formgroup full"><button class="btn" onclick="addProduct()">Add to Stylo catalogue</button></div>
+ </div></div>
+</section>
+
+<section id="storeManage" class="page hidden">
+ <div class="section-head"><div><h2>Store & locations</h2><p>Manage where customers can discover your local inventory.</p></div></div>
+ <div class="two"><div class="panel"><h3>Store profile</h3><div class="formgrid"><div class="formgroup"><label>Store name</label><input value="Meher Fashion House"></div><div class="formgroup"><label>Phone</label><input value="+91 98xxx xxx12"></div><div class="formgroup full"><label>Address</label><input value="Local garment store, Bhopal"></div></div><button class="btn" style="margin-top:14px" onclick="toast('Store profile saved')">Save store profile</button></div>
+ <div class="panel"><h3>Supported locations</h3><div id="locationList"></div></div></div>
+</section>
+</main>
+</div>
+
+<div id="productModal" class="modal hidden"><div class="modal-box"><div class="modal-head"><h2 id="modalTitle"></h2><button class="close" onclick="closeModal()">×</button></div><div id="modalContent" style="margin-top:15px"></div></div></div>
+
+<script>
+const locations=['Patelnagar','Anandnagar','Ratnagiri','Awadpuri','Ayodhya Bypass'];
+const images={
+ tshirt:'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=700&q=80',
+ tshirt2:'https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=700&q=80',
+ kurta:'https://images.unsplash.com/photo-1597983073493-88cd35cf93e1?w=700&q=80',
+ kurta2:'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=700&q=80',
+ shirt:'https://images.unsplash.com/photo-1603252109303-2751441dd157?w=700&q=80',
+ jeans:'https://images.unsplash.com/photo-1542272604-787c3835535d?w=700&q=80',
+ jacket:'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=700&q=80',
+ top:'https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=700&q=80',
+ kurti:'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=700&q=80',
+ saree:'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=700&q=80',
+ frock:'https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=700&q=80',
+ gown:'https://images.unsplash.com/photo-1566174053879-31528523f8ae?w=700&q=80',
+ tshirt3:'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=700&q=80',
+ kurta3:'https://images.unsplash.com/photo-1603252110481-7ba873bf42ab?w=700&q=80',
+ shirt2:'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=700&q=80',
+ jeans2:'https://images.unsplash.com/photo-1582552938357-32b906df40cb?w=700&q=80',
+ jacket2:'https://images.unsplash.com/photo-1548883354-7622d03aca27?w=700&q=80',
+ top2:'https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=700&q=80',
+ kurti3:'https://images.unsplash.com/photo-1610030469668-8e9b7f5d7c6b?w=700&q=80',
+ saree2:'https://images.unsplash.com/photo-1610189012906-8e9c0f7d6a31?w=700&q=80',
+ frock2:'https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?w=700&q=80',
+ gown2:'https://images.unsplash.com/photo-1566174053879-31528523f8ae?w=700&q=80'
+};
+let products=[
+ {id:1,name:'Classic Black T-Shirt',gender:'Men',category:'T-Shirt',store:'Meher Fashion House',location:'Patelnagar',price:599,old:799,stock:14,sizes:'S,M,L,XL',img:images.tshirt},
+ {id:2,name:'Oversized White T-Shirt',gender:'Men',category:'T-Shirt',store:'Blue Street',location:'Anandnagar',price:699,old:899,stock:8,sizes:'M,L,XL',img:images.tshirt2},
+ {id:3,name:'Graphic Street T-Shirt',gender:'Men',category:'T-Shirt',store:'Urban Thread Co.',location:'Awadpuri',price:749,old:999,stock:11,sizes:'S,M,L,XL',img:images.tshirt3},
+ {id:4,name:'Men Ethnic Kurta',gender:'Men',category:'Kurta',store:'Rangrez Ethnic Wear',location:'Ayodhya Bypass',price:1799,old:2199,stock:6,sizes:'M,L,XL,XXL',img:images.kurta},
+ {id:5,name:'Handloom Cotton Kurta',gender:'Men',category:'Kurta',store:'Meher Fashion House',location:'Patelnagar',price:1299,old:1599,stock:30,sizes:'S,M,L,XL',img:images.kurta2},
+ {id:6,name:'Festive Printed Kurta',gender:'Men',category:'Kurta',store:'City Looms',location:'Ratnagiri',price:1499,old:1899,stock:7,sizes:'M,L,XL,XXL',img:images.kurta3},
+ {id:7,name:'Classic White Shirt',gender:'Men',category:'Shirt',store:'City Looms',location:'Ratnagiri',price:1499,old:1799,stock:8,sizes:'M,L,XL',img:images.shirt},
+ {id:8,name:'Oxford Blue Shirt',gender:'Men',category:'Shirt',store:'Blue Street',location:'Anandnagar',price:1399,old:1699,stock:10,sizes:'S,M,L,XL',img:images.shirt2},
+ {id:9,name:'Slim Fit Blue Jeans',gender:'Men',category:'Jeans',store:'Blue Street',location:'Anandnagar',price:1799,old:2199,stock:9,sizes:'30,32,34,36',img:images.jeans},
+ {id:10,name:'Regular Fit Dark Jeans',gender:'Men',category:'Jeans',store:'Urban Thread Co.',location:'Awadpuri',price:1899,old:2299,stock:5,sizes:'30,32,34,36,38',img:images.jeans2},
+ {id:11,name:'Denim Jacket',gender:'Men',category:'Jacket',store:'Urban Thread Co.',location:'Awadpuri',price:2199,old:2899,stock:5,sizes:'M,L,XL',img:images.jacket},
+ {id:12,name:'Classic Bomber Jacket',gender:'Men',category:'Jacket',store:'Blue Street',location:'Anandnagar',price:2499,old:2999,stock:4,sizes:'M,L,XL',img:images.jacket2},
+ {id:13,name:'Linen Casual Top',gender:'Women',category:'Top',store:'City Looms',location:'Ratnagiri',price:799,old:999,stock:10,sizes:'S,M,L',img:images.top},
+ {id:14,name:'Ribbed Everyday Top',gender:'Women',category:'Top',store:'Style Studio',location:'Anandnagar',price:699,old:899,stock:9,sizes:'S,M,L,XL',img:images.top2},
+ {id:15,name:'Printed Straight Kurti',gender:'Women',category:'Kurti',store:'Meher Fashion House',location:'Patelnagar',price:899,old:1199,stock:12,sizes:'S,M,L,XL',img:images.kurti},
+ {id:16,name:'Anarkali Kurti Set',gender:'Women',category:'Kurti',store:'Rangrez Ethnic Wear',location:'Ayodhya Bypass',price:1899,old:2299,stock:20,sizes:'S,M,L',img:images.kurti2},
+ {id:17,name:'Pastel Printed Kurti',gender:'Women',category:'Kurti',store:'Style Studio',location:'Awadpuri',price:999,old:1299,stock:8,sizes:'S,M,L,XL',img:images.kurti3},
+ {id:18,name:'Festive Silk Saree',gender:'Women',category:'Saree',store:'Rangrez Ethnic Wear',location:'Awadpuri',price:2499,old:2999,stock:4,sizes:'Free Size',img:images.saree},
+ {id:19,name:'Banarasi Celebration Saree',gender:'Women',category:'Saree',store:'Rangrez Ethnic Wear',location:'Ayodhya Bypass',price:3199,old:3799,stock:5,sizes:'Free Size',img:images.saree2},
+ {id:20,name:'Floral Summer Frock',gender:'Women',category:'Frock',store:'Style Studio',location:'Anandnagar',price:1599,old:1899,stock:7,sizes:'S,M,L',img:images.frock},
+ {id:21,name:'Kids Floral Party Frock',gender:'Women',category:'Frock',store:'Meher Fashion House',location:'Patelnagar',price:1299,old:1599,stock:6,sizes:'S,M,L',img:images.frock2},
+ {id:22,name:'Evening Maxi Gown',gender:'Women',category:'Gown',store:'Style Studio',location:'Awadpuri',price:2899,old:3499,stock:25,sizes:'S,M,L',img:images.gown},
+ {id:23,name:'Embroidered Party Gown',gender:'Women',category:'Gown',store:'Rangrez Ethnic Wear',location:'Ayodhya Bypass',price:3299,old:3999,stock:5,sizes:'S,M,L,XL',img:images.gown2},
+ {id:24,name:'Premium Polo T-Shirt',gender:'Men',category:'T-Shirt',store:'Meher Fashion House',location:'Patelnagar',price:899,old:1199,stock:9,sizes:'S,M,L,XL',img:images.tshirt3},
+ {id:25,name:'Classic Festive Kurta',gender:'Men',category:'Kurta',store:'Meher Fashion House',location:'Patelnagar',price:1599,old:1999,stock:7,sizes:'M,L,XL,XXL',img:images.kurta3},
+ {id:26,name:'Formal Blue Shirt',gender:'Men',category:'Shirt',store:'Meher Fashion House',location:'Patelnagar',price:1299,old:1599,stock:8,sizes:'M,L,XL',img:images.shirt2},
+ {id:27,name:'Comfort Stretch Jeans',gender:'Men',category:'Jeans',store:'Meher Fashion House',location:'Patelnagar',price:1699,old:2099,stock:8,sizes:'30,32,34,36',img:images.jeans2},
+ {id:28,name:'Lightweight Casual Jacket',gender:'Men',category:'Jacket',store:'Meher Fashion House',location:'Patelnagar',price:2299,old:2799,stock:5,sizes:'M,L,XL',img:images.jacket2},
+ {id:29,name:'Everyday Cotton Top',gender:'Women',category:'Top',store:'Meher Fashion House',location:'Patelnagar',price:749,old:949,stock:10,sizes:'S,M,L,XL',img:images.top2},
+ {id:30,name:'Floral Daily Kurti',gender:'Women',category:'Kurti',store:'Meher Fashion House',location:'Patelnagar',price:949,old:1199,stock:10,sizes:'S,M,L,XL',img:images.kurti3},
+ {id:31,name:'Festive Printed Saree',gender:'Women',category:'Saree',store:'Meher Fashion House',location:'Patelnagar',price:2199,old:2699,stock:5,sizes:'Free Size',img:images.saree2},
+ {id:32,name:'Cotton Party Frock',gender:'Women',category:'Frock',store:'Meher Fashion House',location:'Patelnagar',price:1399,old:1699,stock:6,sizes:'S,M,L',img:images.frock2},
+ {id:33,name:'Classic Evening Gown',gender:'Women',category:'Gown',store:'Meher Fashion House',location:'Patelnagar',price:2799,old:3399,stock:4,sizes:'S,M,L,XL',img:images.gown2}
+];
+let currentGender='Men', currentLocation='Patelnagar', reservations=[];
+let notifications=[
+ {id:1,type:'welcome',title:'Welcome to Stylo',text:'Discover local fashion, live stock and nearby stores.',time:'Just now',read:false},
+ {id:2,type:'stock',title:'Fresh stock available',text:'New products have been added across local Stylo stores.',time:'Today',read:false},
+ {id:3,type:'location',title:'5 local areas available',text:'Browse products from Patelnagar, Anandnagar, Ratnagiri, Awadpuri and Ayodhya Bypass.',time:'Today',read:true}
+];
+
+function money(n){return '₹'+Number(n).toLocaleString('en-IN')}
+function setLocation(v){currentLocation=v;document.getElementById('heroLocation').textContent=v;document.getElementById('storeLocationText').textContent='Stores in '+v;renderProducts();renderStores()}
+function setGender(g){
+ currentGender=g;
+ ['menBtn','pMen'].forEach(id=>{let e=document.getElementById(id);if(e)e.classList.toggle('active',g==='Men')});
+ ['womenBtn','pWomen'].forEach(id=>{let e=document.getElementById(id);if(e)e.classList.toggle('active',g==='Women')});
+ renderProducts();
+}
+function switchMode(mode){
+ document.getElementById('customerMode').classList.toggle('active',mode==='customer');document.getElementById('shopMode').classList.toggle('active',mode==='shop');
+ document.getElementById('customerNav').classList.toggle('hidden',mode!=='customer');document.getElementById('shopNav').classList.toggle('hidden',mode!=='shop');
+ const first=mode==='customer'?'discover':'dashboard';showPage(first);
+}
+const titles={discover:'Discover local fashion',products:'Product catalogue',stores:'Nearby local stores',reservations:'My reservations',notifications:'Notifications',dashboard:'Shopkeeper dashboard',inventory:'Inventory management',add:'Add product',storeManage:'Store & location'};
+function showPage(id,btn){
+ document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');document.getElementById('pageTitle').textContent=titles[id]||'Stylo';
+ document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');
+ if(id==='discover'||id==='products')renderProducts();if(id==='stores')renderStores();if(id==='reservations')renderReservations();if(id==='notifications')renderNotificationsPage();if(id==='dashboard')renderDashboard();if(id==='inventory')renderInventory();if(id==='storeManage')renderLocations();
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+function getFiltered(){
+ const search=((document.getElementById('productSearch')?.value||document.getElementById('homeSearch')?.value||'')).toLowerCase();
+ const cat=document.getElementById('productCategory')?.value || document.getElementById('homeCategory')?.value || 'All';
+ const store=document.getElementById('productStore')?.value || 'All';
+ return products.filter(p=>p.gender===currentGender && p.location===currentLocation && (cat==='All'||p.category===cat) && (store==='All'||p.store===store) && (!search||p.name.toLowerCase().includes(search)||p.category.toLowerCase().includes(search)));
+}
+function renderProducts(){
+ const data=getFiltered();
+ const grids=[document.getElementById('homeGrid'),document.getElementById('productGrid')];
+ grids.forEach(g=>{if(!g)return;g.innerHTML=data.length?data.map(card).join(''):'<div class="empty" style="grid-column:1/-1">No matching products in '+currentLocation+'. Try another location or category.</div>'});
+ const stores=[...new Set(products.map(p=>p.store))];const ss=document.getElementById('productStore');if(ss){let old=ss.value;ss.innerHTML='<option>All</option>'+stores.map(s=>`<option>${s}</option>`).join('');if(stores.includes(old))ss.value=old}
+ renderStores(true);
+}
+function card(p){
+ const status=p.stock===0?'Out of stock':p.stock<=30?'Only '+p.stock+' left':p.stock+' in stock';
+ return `<article class="card" onclick="openProduct(${p.id})"><div class="pic" style="background-image:url('${p.img}')"><span class="badge">${p.gender}</span><span class="stock">${status}</span></div><div class="body"><h3>${p.name}</h3><div class="meta">${p.category} · ${p.store} · ${p.location}</div><span class="price">${money(p.price)}</span>${p.old?`<span class="old">${money(p.old)}</span>`:''}<div class="card-actions"><button class="btn small" ${p.stock===0?'disabled':''} onclick="event.stopPropagation();reserve(${p.id})">${p.stock?'Reserve':'Out of stock'}</button><button class="btn ghost small" onclick="event.stopPropagation();openProduct(${p.id})">Details</button></div></div></article>`;
+}
+function openProduct(id){
+ const p=products.find(x=>x.id===id);if(!p)return;
+ document.getElementById('modalTitle').textContent=p.name;
+ document.getElementById('modalContent').innerHTML=`<div style="display:grid;grid-template-columns:240px 1fr;gap:20px"><div class="pic" style="height:300px;border-radius:12px;background-image:url('${p.img}')"></div><div><div class="pill">${p.gender}</div><div class="pill">${p.category}</div><h3 style="font-size:23px;margin:14px 0 6px">${p.name}</h3><p style="color:var(--muted);font-size:13px">${p.store} · ${p.location}</p><p><span class="price" style="font-size:22px">${money(p.price)}</span>${p.old?`<span class="old">${money(p.old)}</span>`:''}</p><p style="font-size:13px">Available sizes: <b>${p.sizes}</b></p><p style="font-size:13px"><b>${p.stock}</b> units currently available.</p><button class="btn" ${p.stock===0?'disabled':''} onclick="reserve(${p.id})">${p.stock?'Reserve & try in store':'Out of stock'}</button></div></div>`;
+ document.getElementById('productModal').classList.remove('hidden');
+}
+function closeModal(){document.getElementById('productModal').classList.add('hidden')}
+function reserve(id){
+ const p=products.find(x=>x.id===id);if(!p||!p.stock)return;
+ p.stock--;reservations.unshift({id:Date.now(),productId:p.id,name:p.name,store:p.store,location:p.location,status:'Pending'});
+  notifications.unshift({id:Date.now()+1,type:'reservation',title:'Reservation created',text:p.name+' reserved at '+p.store+'. 1 unit is being held for you.',time:'Just now',read:false});
+ closeModal();renderProducts();renderDashboard();renderInventory();toast('Reservation created',`${p.name} reserved at ${p.store}. 1 unit held.`);showPage('reservations');
+}
+function renderStores(silent){
+ const data=products.filter(p=>p.location===currentLocation);
+ const stores={};data.forEach(p=>(stores[p.store]??=[]).push(p));
+ const html=Object.entries(stores).map(([name,ps])=>`<div class="store"><div class="store-top"><div><h3>${name}</h3><p>${currentLocation} · Local garment store</p></div><span style="font-size:12px">★ 4.6</span></div><span class="pill">${ps.length} listed products</span><span class="pill">${ps.reduce((a,p)=>a+p.stock,0)} units</span><p style="margin-top:10px">${[...new Set(ps.map(p=>p.category))].join(' · ')}</p></div>`).join('');
+ document.getElementById('homeStores').innerHTML=html||'<div class="empty" style="grid-column:1/-1">No stores listed in this area.</div>';document.getElementById('storeGrid').innerHTML=html||'<div class="empty">No stores listed in this area.</div>';
+}
+function renderReservations(){
+ const el=document.getElementById('reservationList');if(!reservations.length){el.innerHTML='<div class="empty">No reservations yet. Reserve a product from the catalogue.</div>';return}
+ el.innerHTML=reservations.map(r=>{const p=products.find(x=>x.id===r.productId);return `<div class="panel" style="display:flex;align-items:center;gap:15px;margin-bottom:10px"><div class="thumb" style="width:60px;height:70px;background-image:url('${p?.img||images.tshirt}')"></div><div style="flex:1"><b>${r.name}</b><div class="meta">${r.store} · ${r.location}</div></div><span class="status ${r.status==='Confirmed'?'in':'low'}">${r.status}</span><button class="btn ghost small" onclick="confirmRes(${r.id})">Confirm pickup</button></div>`}).join('');
+}
+function confirmRes(id){let r=reservations.find(x=>x.id===id);if(r){r.status='Confirmed';notifications.unshift({id:Date.now(),type:'reservation',title:'Pickup confirmed',text:r.name+' is ready for your store visit at '+r.store+'.',time:'Just now',read:false});renderReservations();renderDashboard();renderNotifications();toast('Reservation confirmed','Customer can now visit the store.');}}
+function renderDashboard(){
+ const total=products.reduce((a,p)=>a+p.stock,0),low=products.filter(p=>p.stock<=30).length;
+ document.getElementById('statProducts').textContent=products.length;document.getElementById('statStock').textContent=total;document.getElementById('statLow').textContent=low;document.getElementById('statRes').textContent=reservations.length;
+ document.getElementById('lowStockList').innerHTML=products.filter(p=>p.stock<=30).map(p=>`<div class="notice"><b>${p.name}</b><br><span style="color:var(--muted)">${p.category} · ${p.location} · ${p.stock} left</span></div>`).join('')||'<p class="meta">No low-stock products.</p>';
+ document.getElementById('recentRes').innerHTML=reservations.slice(0,5).map(r=>`<div class="notice"><b>${r.name}</b><br><span style="color:var(--muted)">${r.store} · ${r.status}</span></div>`).join('')||'<p class="meta">No reservations yet.</p>';
+}
+function renderInventory(){
+ const q=(document.getElementById('inventorySearch').value||'').toLowerCase(),g=document.getElementById('inventoryGender').value,c=document.getElementById('inventoryCategory').value;
+ const data=products.filter(p=>(g==='All'||p.gender===g)&&(c==='All'||p.category===c)&&(!q||p.name.toLowerCase().includes(q)));
+ document.getElementById('inventoryBody').innerHTML=data.map(p=>`<tr><td><div style="display:flex;align-items:center;gap:10px"><div class="thumb" style="background-image:url('${p.img}')"></div><b>${p.name}</b></div></td><td>${p.gender}</td><td>${p.category}</td><td>${p.location}</td><td>${money(p.price)}</td><td><div class="qty"><button onclick="changeStock(${p.id},-1)">−</button><b>${p.stock}</b><button onclick="changeStock(${p.id},1)">+</button></div></td><td><span class="status ${p.stock===0?'out':p.stock<=30?'low':'in'}">${p.stock===0?'Out of stock':p.stock<=30?'Low stock':'In stock'}</span></td><td><button class="btn ghost small" onclick="editProduct(${p.id})">Edit</button></td></tr>`).join('');
+}
+function changeStock(id,delta){
+  const p=products.find(x=>x.id===id);
+  if(p){
+    const before=p.stock;
+    p.stock=Math.max(0,p.stock+delta);
+    if(p.stock===0 && before>0) notifications.unshift({id:Date.now(),type:'stock',title:'Product out of stock',text:p.name+' is now out of stock.',time:'Just now',read:false});
+    else if(p.stock<=30 && before>3) notifications.unshift({id:Date.now(),type:'stock',title:'Low stock alert',text:p.name+' has only '+p.stock+' unit(s) left.',time:'Just now',read:false});
+    renderInventory();renderDashboard();renderProducts();renderNotifications();
+  }
+}
+function editProduct(id){const p=products.find(x=>x.id===id);if(!p)return;const n=prompt('Set stock for '+p.name,p.stock);if(n!==null&&!isNaN(n)){p.stock=Math.max(0,Number(n));renderInventory();renderDashboard();renderProducts();}}
+function addProduct(){
+ const name=document.getElementById('newName').value.trim(),gender=document.getElementById('newGender').value,category=document.getElementById('newCategory').value,location=document.getElementById('newLocation').value,price=Number(document.getElementById('newPrice').value),stock=Number(document.getElementById('newStock').value),sizes=document.getElementById('newSizes').value,image=document.getElementById('newImage').value.trim();
+ if(!name||!price||stock<0){toast('Missing details','Enter product name, price and stock.');return}
+ const map={ 'T-Shirt':images.tshirt,'Kurta':images.kurta,'Shirt':images.shirt,'Jeans':images.jeans,'Jacket':images.jacket,'Top':images.top,'Kurti':images.kurti,'Saree':images.saree,'Frock':images.frock,'Gown':images.gown};
+ products.push({id:Date.now(),name,gender,category,store:'Meher Fashion House',location,price,old:0,stock,sizes,img:image||map[category]||images.tshirt});
+  notifications.unshift({id:Date.now()+1,type:'new',title:'Product added',text:name+' is now available in the Stylo catalogue.',time:'Just now',read:false});
+ document.getElementById('newName').value='';document.getElementById('newPrice').value='';document.getElementById('newStock').value='';toast('Product added',`${name} is now available in the catalogue.`);renderDashboard();renderInventory();renderProducts();showPage('inventory');
+}
+function renderLocations(){document.getElementById('locationList').innerHTML=locations.map(l=>`<div style="padding:12px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between"><span>📍 <b>${l}</b></span><span class="status in">Active</span></div>`).join('')}
+function toast(title,msg=''){let x=document.createElement('div');x.style='position:fixed;right:25px;bottom:25px;z-index:50;background:#241c1f;color:#fff;padding:14px 17px;border-radius:12px;box-shadow:var(--shadow);font-size:12px;max-width:340px';x.innerHTML='<b>'+title+'</b><br><span style="opacity:.8">'+msg+'</span>';document.body.appendChild(x);setTimeout(()=>x.remove(),2800)}
+
+let generatedOTP='', authPhone='';
+function sendOTP(){
+  const phone=(document.getElementById('authPhone').value||'').replace(/\D/g,'');
+  const err=document.getElementById('phoneError');
+  if(!/^\d{10}$/.test(phone)){err.textContent='Please enter a valid 10-digit mobile number.';return}
+  authPhone=phone;
+  generatedOTP=String(Math.floor(100000+Math.random()*900000));
+  err.textContent='';
+  document.getElementById('phoneStep').classList.remove('active');
+  document.getElementById('otpStep').classList.add('active');
+  document.getElementById('demoOtp').innerHTML='<b>Prototype OTP:</b> '+generatedOTP+'<br><span style="color:var(--muted)">In a real app this OTP would be sent by SMS.</span>';
+  document.getElementById('otp1').focus();
+}
+function verifyOTP(){
+  const entered=[1,2,3,4,5,6].map(i=>document.getElementById('otp'+i).value).join('');
+  const err=document.getElementById('otpError');
+  if(entered!==generatedOTP){err.textContent='Incorrect OTP. Please enter the OTP shown above.';return}
+  localStorage.setItem('styloLogin','1');
+  localStorage.setItem('styloPhone',authPhone);
+  document.getElementById('authScreen').classList.add('hidden');
+  document.getElementById('accountPhone').textContent='+91 '+authPhone;
+  err.textContent='';
+}
+function backToPhone(){
+  document.getElementById('otpStep').classList.remove('active');
+  document.getElementById('phoneStep').classList.add('active');
+  document.getElementById('otpError').textContent='';
+}
+function logout(){
+  localStorage.removeItem('styloLogin');localStorage.removeItem('styloPhone');
+  document.getElementById('accountPop').classList.add('hidden');
+  document.getElementById('authScreen').classList.remove('hidden');
+  backToPhone();
+}
+function toggleAccount(){document.getElementById('accountPop').classList.toggle('hidden')}
+function setupAuth(){
+  // Always start the prototype at the login interface.
+  localStorage.removeItem('styloLogin');
+  localStorage.removeItem('styloPhone');
+  const logged=false;
+  const phone=localStorage.getItem('styloPhone')||'';
+  if(logged){
+    document.getElementById('authScreen').classList.add('hidden');
+    document.getElementById('accountPhone').textContent=phone?'+91 '+phone:'';
+  }
+  [1,2,3,4,5,6].forEach((i,idx)=>{
+    const el=document.getElementById('otp'+i);
+    el.addEventListener('input',()=>{el.value=el.value.replace(/\D/g,'').slice(0,1);if(el.value&&idx<5)document.getElementById('otp'+(i+1)).focus()});
+    el.addEventListener('keydown',e=>{if(e.key==='Backspace'&&!el.value&&idx>0)document.getElementById('otp'+(i-1)).focus()});
+  });
+}
+
+
+function notificationIcon(type){return type==='reservation'?'▣':type==='stock'?'⚠':type==='new'?'＋':'●'}
+function renderNotifications(){
+  const unread=notifications.filter(n=>!n.read).length;
+  const badge=document.getElementById('notificationBadge');
+  if(badge){badge.textContent=unread>99?'99+':unread;badge.classList.toggle('hidden',unread===0)}
+  const list=document.getElementById('notificationList');
+  if(list){
+    list.innerHTML=notifications.length?notifications.slice(0,12).map(n=>`<div class="notification-item ${n.read?'':'unread'}" onclick="readNotification(${n.id})"><div class="notification-icon">${notificationIcon(n.type)}</div><div><b>${n.title}</b><p>${n.text}</p><small>${n.time}</small></div></div>`).join(''):'<div class="notification-empty">No notifications yet.</div>';
+  }
+}
+function renderNotificationsPage(){
+  const el=document.getElementById('notificationPageList'); if(!el)return;
+  el.innerHTML=notifications.length?notifications.map(n=>`<div class="notification-page-item ${n.read?'':'unread'}" onclick="readNotification(${n.id})"><div class="notification-icon">${notificationIcon(n.type)}</div><div><b>${n.title}</b><p>${n.text}</p><small>${n.time}</small></div></div>`).join(''):'<div class="empty">No notifications yet.</div>';
+  renderNotifications();
+}
+function readNotification(id){const n=notifications.find(x=>x.id===id);if(n)n.read=true;renderNotifications();renderNotificationsPage()}
+function markAllNotificationsRead(){notifications.forEach(n=>n.read=true);renderNotifications();renderNotificationsPage()}
+function toggleNotifications(){
+  const panel=document.getElementById('notificationPanel');
+  panel.classList.toggle('hidden');
+  if(!panel.classList.contains('hidden'))renderNotifications();
+}
+
+renderProducts();renderStores();renderDashboard();renderInventory();renderLocations();renderNotifications();
+setupAuth();
+</script>
+</body>
+</html>
